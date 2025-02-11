@@ -21,7 +21,7 @@ jobs:
       - name: Деплой на сервер
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF'
-            cd /my_projects/korean_tg_bot  # Путь к проекту на сервере
+            cd /root/my_projects/korean_tg_bot  # Путь к проекту на сервере
             git pull origin main      # Обновить код
             docker compose down       # Остановить текущий контейнер
             docker compose up --build -d  # Пересобрать и запустить
