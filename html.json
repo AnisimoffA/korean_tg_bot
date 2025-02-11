@@ -1,0 +1,49 @@
+{
+    "general": {
+        "count": 1,
+        "searchResults": [
+            {
+                "carType": "CAR",
+                "separation": [
+                    "B"
+                ],
+                "trust": [
+                    "Warranty"
+                ],
+                "serviceMark": [
+                    "EncarDiagnosisP0"
+                ],
+                "adType": [
+                    "G"
+                ],
+                "photos": [
+                    {
+                        "type": "001",
+                        "location": "/carpicture07/pic3837/38372130_001.jpg",
+                        "updatedDate": "2024-10-21T05:30:42Z",
+                        "ordering": 1
+                    }
+                ],
+                "manufacturer": "BMW",
+                "modelGroup": "3시리즈",
+                "model": "3시리즈 (G20)",
+                "badge": "320i M 스포츠",
+                "year": 202109,
+                "formYear": 2021,
+                "transmission": "오토",
+                "fuelType": "가솔린",
+                "mileage": 9355,
+                "color": "주황색",
+                "colorExpression": "#A94828;#A94828",
+                "seatColor": "검정색 계열",
+                "seatColorExpression": "#000000;#000000",
+                "price": 3690,
+                "hotmarks": [],
+                "officeCityState": "부산",
+                "sellType": "일반",
+                "serviceCopyCar": "ORIGINAL",
+                "id": 38372130
+            }
+        ]
+    }
+}
