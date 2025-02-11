@@ -35,14 +35,13 @@ def get_price_answer_auto(price_info, json_response):
 
 
 def get_price_answer_manual(price_info):
+    price_with_delivery_and_our_tax = price_info["car_rub_price"] + price_info["our_tax"] + price_info["korean_expenses"]
     return textwrap.dedent(f"""
         <b>В цену включены:</b>  
-        - Стоимость автомобиля: <b>{price_info["car_rub_price"]} ₽ </b> 
+        - Стоимость авто в Корее c доставкой до Владивостока: <b>{price_with_delivery_and_our_tax} ₽ </b> 
         - Таможенное оформление: <b>{price_info["tax_price"]} ₽ </b> 
         - Брокерские услуги(ЭПТС, СБКТС, СВХ): <b>{price_info["broker"]} ₽  </b>
-        - Доставка и транспортировка до Владивостока: <b>{price_info["korean_expenses"]} ₽ </b>
         - Утилизационный сбор:<b> {price_info["util_price"]} ₽ </b>
-        - Наши услуги:<b> {price_info["our_tax"]} ₽ </b>
 
         💎 Cтоимость под ключ: <b>{price_info["price"] - 250000} ₽</b>  
 
