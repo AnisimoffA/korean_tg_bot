@@ -1,10 +1,25 @@
 from calculator import Calculator
 from datetime import date
-from validator import Validator
+from logging import getLogger
 from parser import ParamsParser
 from utils import get_id_from_url
+import time
+
+logger = getLogger(__name__)
 
 
+def timer(func):
+    def wrapper(*args, **kwargs):
+        start = time.time()
+        result = func(*args, **kwargs)
+        end = time.time()
+        execution_time = end - start
+        logger.info(f"Функция {func.__name__} выполнилась за {execution_time:.4f} секунд")
+        return result
+    return wrapper
+
+
+@timer
 def get_car_price_manual(
     car_price: int,
     car_release_date: date,
@@ -22,6 +37,7 @@ def get_car_price_manual(
     return total_price
 
 
+@timer
 def get_car_price_auto(url, is_physical_face=True):
     car_id = get_id_from_url(url)
     new_url = f"https://api.encar.com/mobile/search?carIds={car_id}&infinity=1&pageNo=1&searchType=CAR_ID&sort=MOBILE_MODIFIED_DATE"
