@@ -43,7 +43,7 @@ async def set_config(message: Message):
 
             if key.upper() in data:
                 if key.upper() in ["USD_RUB", "VON_RUB", "EUR_RUB"]:
-                    data[key.upper()] = int(value)
+                    data[key.upper()] = float(value)
                 elif key.upper() in ["KOREAN_EXPENSES"]:
                     new_value = {"amount": int(value), "currency": "VON"}
                     data[key.upper()] = new_value
