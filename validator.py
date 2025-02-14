@@ -49,9 +49,15 @@ class Validator:
         pattern = r"^https://fem\.encar\.com/cars/detail/\d+\?.*carid=\d+.*$"
         pattern2 = r"^https://fem\.encar\.com/cars/detail/\d{8}$"
         pattern3 = r"^http://www\.encar\.com/dc/dc_cardetailview\.do\?carid=\d{8}$"
+        pattern4 = r"^https://fem\.encar\.com/cars/detail/\d{8}\?.*$"
 
         try:
-            if bool(re.match(pattern, url)) or bool(re.match(pattern2, url)) or bool(re.match(pattern3, url)):
+            if (
+                    bool(re.match(pattern, url)) or
+                    bool(re.match(pattern2, url)) or
+                    bool(re.match(pattern3, url)) or
+                    bool(re.match(pattern4, url))
+            ):
                 print("тут был")
                 id = get_id_from_url(url)
                 new_url = f"https://api.encar.com/mobile/search?carIds={id}&infinity=1&pageNo=1&searchType=CAR_ID&sort=MOBILE_MODIFIED_DATE"
