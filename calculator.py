@@ -154,7 +154,7 @@ class Calculator:
                     tax_price["amount"],
                     util_price["amount"],
                     korean_expenses_to_rub["amount"],
-                    config["DELIVERY_TO_REGION"]["amount"],
+                    # config["DELIVERY_TO_REGION"]["amount"],
                     config["BROKER"]["amount"],
                     config["OUR_TAX"]["amount"]
                 ]

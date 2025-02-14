@@ -1,7 +1,7 @@
 {
-    "USD_RUB": 100.5,
-    "VON_RUB": 14.9,
-    "EUR_RUB": 101.2,
+    "USD_RUB": 91.0,
+    "VON_RUB": 16.3,
+    "EUR_RUB": 97.0,
     "DELIVERY_TO_REGION": {
         "amount": 250000,
         "currency": "RUB"
@@ -11,11 +11,11 @@
         "currency": "RUB"
     },
     "OUR_TAX": {
-        "amount": 150000,
+        "amount": 50000,
         "currency": "RUB"
     },
     "KOREAN_EXPENSES": {
-        "amount": 2440000,
+        "amount": 2500000,
         "currency": "VON"
     },
     "PHYSICAL_UTIL_OLD": {
