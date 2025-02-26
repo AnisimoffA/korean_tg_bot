@@ -11,7 +11,6 @@ load_dotenv('.env')
 ACTUAL_DATE = datetime.date.today()
 TG_TOKEN = os.getenv("TG_TOKEN")
 
-
 def load_config():
     with open("config.json", "r", encoding="utf-8") as file:
         return json.load(file)

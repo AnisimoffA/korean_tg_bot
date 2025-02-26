@@ -1,5 +1,6 @@
 from config import load_config, ACTUAL_DATE
 from datetime import date
+from utils import get_exchange_rate
 
 
 class Calculator:
@@ -21,23 +22,28 @@ class Calculator:
             return "gt_5"
 
     @staticmethod
-    def convert_to_rub(dict_):
+    async def convert_to_rub(dict_):
         """
         конвертирует воны, доллары и евро в рубли
         """
         config = load_config()
 
+        if config["MODE"] == "AUTO":
+            currency = await get_exchange_rate()
+        else:
+            currency = config
+
         if dict_["currency"] == 'USD':
-            return {"amount": dict_["amount"] * config["USD_RUB"], "currency": "RUB"}
+            return {"amount": dict_["amount"] * currency["USD_RUB"], "currency": "RUB"}
         elif dict_["currency"] == 'EUR':
-            return {"amount": dict_["amount"] * config["EUR_RUB"], "currency": "RUB"}
+            return {"amount": dict_["amount"] * currency["EUR_RUB"], "currency": "RUB"}
         elif dict_["currency"] == 'VON':
-            return {"amount": dict_["amount"] / config["VON_RUB"], "currency": "RUB"}
+            return {"amount": dict_["amount"] / currency["VON_RUB"], "currency": "RUB"}
         else:
             raise ValueError("Unsupported currency")
 
     @staticmethod
-    def calculate_tax(release_date, engine, car_rub_price):
+    async def calculate_tax(release_date, engine, car_rub_price):
         """
         считает сумму налога
         """
@@ -57,7 +63,7 @@ class Calculator:
                 tax = engine * 3
             else:
                 tax = engine * 3.6
-            tax_rub = Calculator.convert_to_rub({"amount": tax, "currency": "EUR"})
+            tax_rub = await Calculator.convert_to_rub({"amount": tax, "currency": "EUR"})
             return tax_rub
         elif car_age == 'lt_3':
             car_price_eur = car_rub_price["amount"] / config["EUR_RUB"]
@@ -68,10 +74,10 @@ class Calculator:
                 car_price_eur_54 = car_price_eur * 0.54
                 price_engine = engine * 2.5
                 if price_engine > car_price_eur_54:
-                    tax = Calculator.convert_to_rub({"amount": price_engine, "currency": "EUR"})
+                    tax = await Calculator.convert_to_rub({"amount": price_engine, "currency": "EUR"})
                     return tax
                 else:
-                    tax = Calculator.convert_to_rub({"amount": car_price_eur_54, "currency": "EUR"})
+                    tax = await Calculator.convert_to_rub({"amount": car_price_eur_54, "currency": "EUR"})
                     return tax
             elif 8501 <= car_price_eur <= 16700:
                 price_engine = engine * 3.5
@@ -84,10 +90,10 @@ class Calculator:
             else:
                 price_engine = engine * 20
             if price_engine > car_price_eur_48:
-                tax = Calculator.convert_to_rub({"amount": price_engine, "currency": "EUR"})
+                tax = await Calculator.convert_to_rub({"amount": price_engine, "currency": "EUR"})
                 return tax
             else:
-                tax = Calculator.convert_to_rub({"amount": car_price_eur_48, "currency": "EUR"})
+                tax = await Calculator.convert_to_rub({"amount": car_price_eur_48, "currency": "EUR"})
                 return tax
         else:
             print("мы не валидируем машины старше 5 лет")
@@ -131,19 +137,19 @@ class Calculator:
             return config["UTIL_GT_3500_FOR_OLD_CAR"] if older_than_3_years else config["UTIL_GT_3500_FOR_NEW_CAR"]
 
     @staticmethod
-    def calculate_total_price(car_von_price, release_date, engine, is_electro, is_physical_face=True):
+    async def calculate_total_price(car_von_price, release_date, engine, is_electro, is_physical_face=True):
         print("Считаю стоимость авто!")
         config = load_config()
         try:
-            car_rub_price = Calculator.convert_to_rub({"amount": car_von_price, "currency": "VON"})
+            car_rub_price = await Calculator.convert_to_rub({"amount": car_von_price, "currency": "VON"})
             if is_electro:
                 tax_price = Calculator.calculate_tax_electro(car_rub_price)
             else:
-                tax_price = Calculator.calculate_tax(release_date, engine, car_rub_price)
+                tax_price = await Calculator.calculate_tax(release_date, engine, car_rub_price)
             if tax_price["amount"] == 0:
                 return None
             util_price = Calculator.calculate_util(release_date, engine, is_physical_face)
-            korean_expenses_to_rub = Calculator.convert_to_rub({
+            korean_expenses_to_rub = await Calculator.convert_to_rub({
                 "amount": config["KOREAN_EXPENSES"]["amount"],
                 "currency": config["KOREAN_EXPENSES"]["currency"]
             })

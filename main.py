@@ -20,14 +20,14 @@ def timer(func):
 
 
 @timer
-def get_car_price_manual(
+async def get_car_price_manual(
     car_price: int,
     car_release_date: date,
     car_engine: int,
     is_electro: bool,
     is_physical_face: bool
 ):
-    total_price = Calculator.calculate_total_price(
+    total_price = await Calculator.calculate_total_price(
         car_von_price=car_price,
         release_date=car_release_date,
         engine=car_engine,
@@ -38,7 +38,7 @@ def get_car_price_manual(
 
 
 @timer
-def get_car_price_auto(url, is_physical_face=True):
+async def get_car_price_auto(url, is_physical_face=True):
     car_id = get_id_from_url(url)
     new_url = f"https://api.encar.com/mobile/search?carIds={car_id}&infinity=1&pageNo=1&searchType=CAR_ID&sort=MOBILE_MODIFIED_DATE"
 
@@ -50,7 +50,7 @@ def get_car_price_auto(url, is_physical_face=True):
     car_release_date = parser.find_car_release_date()
     car_image_url = parser.find_image_url()
 
-    total_price = Calculator.calculate_total_price(
+    total_price = await Calculator.calculate_total_price(
         car_von_price=car_price,
         release_date=car_release_date,
         engine=car_engine,

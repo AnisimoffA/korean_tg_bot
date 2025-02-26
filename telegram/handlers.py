@@ -7,11 +7,13 @@ from aiogram import F, Router
 import telegram.keyboards as kb
 from aiogram.fsm.context import FSMContext
 from telegram.states import InsertURL, CarInfo
+from utils import get_exchange_rate
 from validator import Validator
 from main import get_car_price_auto, get_car_price_manual
 from telegram.templates.price_answer import (get_price_answer_auto,
                                              get_price_answer_manual,
                                              get_hello_message)
+import logging
 
 router = Router()
 
@@ -32,6 +34,9 @@ async def new_calc(callback: CallbackQuery):
 
 @router.message(Command('set_config'))
 async def set_config(message: Message):
+    """
+    функция для смены значений конфига
+    """
     if message.from_user.id not in [217120905, 1718742365]:
         await message.answer(text=f"Доступ запрещен. Ваш ID - {message.from_user.id}")
     else:
@@ -42,11 +47,19 @@ async def set_config(message: Message):
                 data = json.load(f)
 
             if key.upper() in data:
-                if key.upper() in ["USD_RUB", "VON_RUB", "EUR_RUB"]:
+                if key.upper() == "MODE":
+                    if value.upper() in ["AUTO", "MANUAL"]:
+                        data[key.upper()] = str(value).upper()
+                        logging.debug(f"Мод изменен на {data[key.upper()]}")
+                    else:
+                        raise Exception("мод может быть либо AUTO, либо MANUAL")
+                elif key.upper() in ["USD_RUB", "VON_RUB", "EUR_RUB"]:
                     data[key.upper()] = float(value)
+                    logging.debug(f"Курс {key.upper()} изменен на {value}")
                 elif key.upper() in ["KOREAN_EXPENSES"]:
                     new_value = {"amount": int(value), "currency": "VON"}
                     data[key.upper()] = new_value
+                    logging.debug(f"Расходы по Корее изменены на {value}")
                 else:
                     new_value = {"amount": int(value), "currency": "RUB"}
                     data[key.upper()] = new_value
@@ -61,8 +74,25 @@ async def set_config(message: Message):
             await message.answer(text=f"Ошибка: {e}")
 
 
+@router.message(Command('get_currency'))
+async def set_config(message: Message):
+    """
+    Команда для получения курса с внешнего апи
+    """
+    if message.from_user.id not in [217120905, 1718742365]:
+        await message.answer(text=f"Доступ запрещен. Ваш ID - {message.from_user.id}")
+    else:
+        data = await get_exchange_rate()
+        output = "\n".join(f"{key}: {round(value, 2)}" for key, value in data.items())
+
+        await message.answer(output)
+
+
 @router.message(Command('config'))
 async def set_config(message: Message):
+    """
+    Команда для получения конфига
+    """
     if message.from_user.id not in [217120905, 1718742365]:
         await message.answer(text=f"Доступ запрещен. Ваш ID - {message.from_user.id}")
     else:
@@ -166,7 +196,7 @@ async def is_physical_face(message: Message, state: FSMContext):
         await state.update_data(is_physical_face=face)
         await state.clear()
 
-        price_info = get_car_price_manual(
+        price_info = await get_car_price_manual(
             car_price=data["car_von_price"],
             car_release_date=data["release_date"],
             car_engine=data["engine"],
@@ -206,7 +236,7 @@ async def url(message: Message, state: FSMContext):
     if Validator.is_valid_encar_url(data["url"]):
         await state.clear()
 
-        price_info, http_response_json, image_url = get_car_price_auto(data["url"])
+        price_info, http_response_json, image_url = await get_car_price_auto(data["url"])
 
         if price_info:
             await message.answer_photo(
