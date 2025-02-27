@@ -1,8 +1,7 @@
 import requests
 import urllib3
-import json
 import re
-from datetime import datetime, date
+from datetime import date
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 url = "https://api.encar.com/mobile/search?carIds=38966743&infinity=1&pageNo=1&searchType=CAR_ID&sort=MOBILE_MODIFIED_DATE"
