@@ -8,7 +8,7 @@ class Validator:
     def validate_price(param):
         try:
             param = float(param)
-            if 1000000 < param < 100000000:
+            if 1000000 < param < 500000000:
                 return True
             return False
         except Exception as e:
