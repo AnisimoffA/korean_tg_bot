@@ -25,9 +25,9 @@ async def get_exchange_rate():
         async with session.get(API_URL) as response:
             data = await response.text()
             json_data = json.loads(data)
-            USD_RUB = json_data["Valute"]["USD"]["Value"]
-            VON_RUB = 1000/json_data["Valute"]["KRW"]["Value"]
-            EUR_RUB = json_data["Valute"]["EUR"]["Value"]
+            USD_RUB = (json_data["Valute"]["USD"]["Value"])*1.03
+            VON_RUB = (1000/json_data["Valute"]["KRW"]["Value"])*1.03
+            EUR_RUB = (json_data["Valute"]["EUR"]["Value"])*1.03
 
             return {
                 "USD_RUB": USD_RUB,
