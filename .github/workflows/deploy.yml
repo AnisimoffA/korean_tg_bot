@@ -21,8 +21,16 @@ jobs:
       - name: Деплой на сервер
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF'
-            cd /root/my_projects/korean_tg_bot  # Путь к проекту на сервере
+            cd /root/my_projects/korean_tg_bot  # Путь к проекту
+            
             git pull origin main      # Обновить код
-            docker compose down       # Остановить текущий контейнер
-            docker compose up --build -d  # Пересобрать и запустить
+            
+            docker compose down       # Остановить текущие контейнеры
+            
+            docker compose up -d db   # Запустить только базу данных
+            sleep 10                  # Подождать, чтобы БД запустилась
+            
+            docker compose up --build -d  # Пересобрать и запустить бот
+            
+            docker compose exec bot alembic upgrade head  # Запустить миграции Alembic
           EOF

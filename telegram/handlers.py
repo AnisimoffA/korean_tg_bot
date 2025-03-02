@@ -9,6 +9,7 @@ from aiogram.fsm.context import FSMContext
 from telegram.states import InsertURL, CarInfo
 from utils import get_exchange_rate
 from validator import Validator
+from dao import BaseDAO
 from main import get_car_price_auto, get_car_price_manual
 from telegram.templates.price_answer import (get_price_answer_auto,
                                              get_price_answer_manual,
@@ -205,6 +206,7 @@ async def is_physical_face(message: Message, state: FSMContext):
         )
 
         if price_info:
+            await BaseDAO.insert(message.from_user.id)
             await message.answer(
                 text=get_price_answer_manual(price_info),
                 parse_mode=ParseMode.HTML,
@@ -239,6 +241,7 @@ async def url(message: Message, state: FSMContext):
         price_info, http_response_json, image_url = await get_car_price_auto(data["url"])
 
         if price_info:
+            await BaseDAO.insert(message.from_user.id)
             await message.answer_photo(
                 URLInputFile(image_url),
                 caption=get_price_answer_auto(price_info, http_response_json),
