@@ -32,5 +32,5 @@ jobs:
             
             docker compose up --build -d  # Пересобрать и запустить бот
             
-            docker compose exec bot alembic upgrade head  # Запустить миграции Alembic
+            docker compose exec telegram-bot alembic upgrade head  # Запустить миграции Alembic
           EOF
