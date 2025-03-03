@@ -206,7 +206,10 @@ async def is_physical_face(message: Message, state: FSMContext):
         )
 
         if price_info:
-            await BaseDAO.insert(message.from_user.id)
+            user_id = message.from_user.id
+            username = message.from_user.username if message.from_user.username else "None"
+            await BaseDAO.insert(id=user_id, username=username)
+            logging.info("Пользователь успешно записан")
             await message.answer(
                 text=get_price_answer_manual(price_info),
                 parse_mode=ParseMode.HTML,
@@ -241,7 +244,10 @@ async def url(message: Message, state: FSMContext):
         price_info, http_response_json, image_url = await get_car_price_auto(data["url"])
 
         if price_info:
-            await BaseDAO.insert(message.from_user.id)
+            user_id = message.from_user.id
+            username = message.from_user.username if message.from_user.username else "None"
+            await BaseDAO.insert(id=user_id, username=username)
+            logging.info("Пользователь успешно записан")
             await message.answer_photo(
                 URLInputFile(image_url),
                 caption=get_price_answer_auto(price_info, http_response_json),

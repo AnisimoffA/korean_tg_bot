@@ -1,4 +1,4 @@
-from sqlalchemy import Integer, Column
+from sqlalchemy import Integer, Column, String
 from db import Base
 
 
@@ -7,3 +7,4 @@ class Users(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     telegram_id = Column(Integer, unique=True)
+    username = Column(String)
