@@ -11,6 +11,7 @@ from utils import get_exchange_rate
 from validator import Validator
 from dao import BaseDAO
 from main import get_car_price_auto, get_car_price_manual
+from telegram.templates.help_command import help_text
 from telegram.templates.price_answer import (get_price_answer_auto,
                                              get_price_answer_manual,
                                              get_hello_message)
@@ -129,6 +130,18 @@ async def set_config(message: Message):
             else:
                 output += f"{user.id} | id - {user.telegram_id} | @{user.username}\n"
         await message.answer(output)
+
+
+@router.message(Command('help'))
+async def set_config(message: Message):
+    """
+    Команда помощи
+    """
+    if message.from_user.id not in [217120905, 1718742365]:
+        await message.answer(text=f"Доступ запрещен. Ваш ID - {message.from_user.id}")
+    else:
+        output = help_text
+        await message.answer(output, parse_mode=ParseMode.HTML)
 
 # -------------------------------- MANUAL ---------------------------------------
 @router.callback_query(F.data == "manual")
