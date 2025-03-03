@@ -112,6 +112,24 @@ async def set_config(message: Message):
         await message.answer("\n".join(output))
 
 
+@router.message(Command('get_users'))
+async def set_config(message: Message):
+    """
+    Команда для получения всех пользователей
+    """
+    if message.from_user.id not in [217120905, 1718742365]:
+        await message.answer(text=f"Доступ запрещен. Ваш ID - {message.from_user.id}")
+    else:
+        data = await BaseDAO.select_all()
+        output = ""
+        for user in data:
+            logging.critical(user.username)
+            if user.username is None:
+                output += f"{user.id} | id - {user.telegram_id} | None\n"
+            else:
+                output += f"{user.id} | id - {user.telegram_id} | @{user.username}\n"
+        await message.answer(output)
+
 # -------------------------------- MANUAL ---------------------------------------
 @router.callback_query(F.data == "manual")
 async def manual(callback: CallbackQuery, state: FSMContext):
