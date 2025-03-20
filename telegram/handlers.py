@@ -22,6 +22,13 @@ router = Router()
 
 @router.message(CommandStart())
 async def cmd_start(message: Message):
+    user_id = message.from_user.id
+    username = message.from_user.username if message.from_user.username else "None"
+    try:
+        await BaseDAO.insert(id=user_id, username=username)
+        logging.info("Пользователь успешно записан")
+    except Exception as e:
+        pass
     await message.answer(
         text=get_hello_message(),
         reply_markup=kb.choose_manual_auto_inline,
@@ -124,7 +131,6 @@ async def set_config(message: Message):
         data = await BaseDAO.select_all()
         output = ""
         for user in data:
-            logging.critical(user.username)
             if user.username is None:
                 output += f"{user.id} | id - {user.telegram_id} | None\n"
             else:
@@ -237,10 +243,6 @@ async def is_physical_face(message: Message, state: FSMContext):
         )
 
         if price_info:
-            user_id = message.from_user.id
-            username = message.from_user.username if message.from_user.username else "None"
-            await BaseDAO.insert(id=user_id, username=username)
-            logging.info("Пользователь успешно записан")
             await message.answer(
                 text=get_price_answer_manual(price_info),
                 parse_mode=ParseMode.HTML,
