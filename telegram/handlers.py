@@ -289,7 +289,7 @@ async def url(message: Message, state: FSMContext):
             )
 
         else:
-            await message.answer(f"Мы не работаем с машинами старше 5 лет", reply_markup=kb.repeat_calculation)
+            await message.answer(f"Что-то пошло не так", reply_markup=kb.repeat_calculation)
 
     else:
         await message.answer("Некорректный URL. Пожалуйста, введите еще раз:")

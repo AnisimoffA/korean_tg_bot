@@ -96,8 +96,20 @@ class Calculator:
                 tax = await Calculator.convert_to_rub({"amount": car_price_eur_48, "currency": "EUR"})
                 return tax
         else:
-            print("мы не валидируем машины старше 5 лет")
-            return {"amount": 0, "currency": "RUB"}
+            if engine < 1000:
+                tax = engine * 3
+            elif 1000 <= engine < 1500:
+                tax = engine * 3.2
+            elif 1500 <= engine < 1800:
+                tax = engine * 3.5
+            elif 1800 <= engine < 2300:
+                tax = engine * 4.8
+            elif 2300 <= engine <= 3000:
+                tax = engine * 5
+            else:
+                tax = engine * 5.7
+            tax_rub = await Calculator.convert_to_rub({"amount": tax, "currency": "EUR"})
+            return tax_rub
 
     @staticmethod
     def calculate_tax_electro(car_rub_price):
