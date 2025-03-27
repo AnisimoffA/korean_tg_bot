@@ -149,8 +149,19 @@ class Calculator:
             return config["UTIL_GT_3500_FOR_OLD_CAR"] if older_than_3_years else config["UTIL_GT_3500_FOR_NEW_CAR"]
 
     @staticmethod
+    def calculate_our_tax(car_von_price):
+        config = load_config()
+
+        if car_von_price <= 50000000:
+            our_tax = config["OUR_TAX"]["amount"]
+        elif 50000000 < car_von_price <= 85000000:
+            our_tax = config["OUR_TAX"]["amount"] + 70000
+        else:
+            our_tax = config["OUR_TAX"]["amount"] + 100000
+        return {"amount": our_tax, "currency": "RUB"}
+
+    @staticmethod
     async def calculate_total_price(car_von_price, release_date, engine, is_electro, is_physical_face=True):
-        print("Считаю стоимость авто!")
         config = load_config()
         try:
             car_rub_price = await Calculator.convert_to_rub({"amount": car_von_price, "currency": "VON"})
@@ -161,6 +172,8 @@ class Calculator:
             if tax_price["amount"] == 0:
                 return None
             util_price = Calculator.calculate_util(release_date, engine, is_physical_face)
+            our_tax = Calculator.calculate_our_tax(car_von_price)
+
             korean_expenses_to_rub = await Calculator.convert_to_rub({
                 "amount": config["KOREAN_EXPENSES"]["amount"],
                 "currency": config["KOREAN_EXPENSES"]["currency"]
@@ -174,7 +187,7 @@ class Calculator:
                     korean_expenses_to_rub["amount"],
                     # config["DELIVERY_TO_REGION"]["amount"],
                     config["BROKER"]["amount"],
-                    config["OUR_TAX"]["amount"]
+                    our_tax["amount"]
                 ]
             )
             return {
@@ -185,7 +198,7 @@ class Calculator:
                 "korean_expenses": round(korean_expenses_to_rub["amount"]),
                 "delivery_to_region": round(config["DELIVERY_TO_REGION"]["amount"]),
                 "broker": round(config["BROKER"]["amount"]),
-                "our_tax": round(config["OUR_TAX"]["amount"])
+                "our_tax": round(our_tax["amount"])
 
             }
         except Exception as e:

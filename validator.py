@@ -58,7 +58,6 @@ class Validator:
                     bool(re.match(pattern3, url)) or
                     bool(re.match(pattern4, url))
             ):
-                print("тут был")
                 id = get_id_from_url(url)
                 new_url = f"https://api.encar.com/mobile/search?carIds={id}&infinity=1&pageNo=1&searchType=CAR_ID&sort=MOBILE_MODIFIED_DATE"
                 response = requests.get(new_url, verify=False)
