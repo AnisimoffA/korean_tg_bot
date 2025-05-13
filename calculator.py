@@ -152,12 +152,12 @@ class Calculator:
     def calculate_our_tax(car_von_price):
         config = load_config()
 
-        if car_von_price <= 50000000:
+        if car_von_price <= 100000000:
             our_tax = config["OUR_TAX"]["amount"]
-        elif 50000000 < car_von_price <= 85000000:
-            our_tax = config["OUR_TAX"]["amount"] + 70000
+        # elif 50000000 < car_von_price <= 85000000:
+        #     our_tax = config["OUR_TAX"]["amount"] + 70000
         else:
-            our_tax = config["OUR_TAX"]["amount"] + 100000
+            our_tax = config["OUR_TAX"]["amount"] + 60000
         return {"amount": our_tax, "currency": "RUB"}
 
     @staticmethod
